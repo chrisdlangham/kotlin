@@ -75,8 +75,7 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
 
     @Argument(
         value = "-opt-in",
-        // Uncomment after deletion of optInDeprecated
-        // deprecatedName = "-Xopt-in",
+        deprecatedName = "-Xopt-in",
         valueDescription = "<fq.name>",
         description = "Enable usages of API that requires opt-in with an opt-in requirement marker with the given fully qualified name"
     )
@@ -158,21 +157,6 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
         plugins = "Android"
     )
     var experimental: Array<String>? = null
-
-    @Argument(
-        value = "-Xuse-experimental",
-        valueDescription = "<fq.name>",
-        description = "Enable, but don't propagate usages of experimental API for marker annotation with the given fully qualified name"
-    )
-    var useExperimental: Array<String>? by FreezableVar(null)
-
-    // NB: we have to keep this flag for some time due to bootstrapping problems
-    @Argument(
-        value = "-Xopt-in",
-        valueDescription = "<fq.name>",
-        description = "Enable usages of API that requires opt-in with an opt-in requirement marker with the given fully qualified name"
-    )
-    var optInDeprecated: Array<String>? by FreezableVar(null)
 
     @Argument(
         value = "-Xproper-ieee754-comparisons",
@@ -412,19 +396,7 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
             put(AnalysisFlags.skipMetadataVersionCheck, skipMetadataVersionCheck)
             put(AnalysisFlags.skipPrereleaseCheck, skipPrereleaseCheck || skipMetadataVersionCheck)
             put(AnalysisFlags.multiPlatformDoNotCheckActual, noCheckActual)
-            val useExperimentalFqNames = useExperimental?.toList().orEmpty()
-            if (useExperimentalFqNames.isNotEmpty()) {
-                collector.report(
-                    WARNING, "'-Xuse-experimental' is deprecated and will be removed in a future release, please use -opt-in instead"
-                )
-            }
-            val optInDeprecatedFqNames = optInDeprecated?.toList().orEmpty()
-            if (optInDeprecatedFqNames.isNotEmpty()) {
-                collector.report(
-                    WARNING, "'-Xopt-in' is deprecated and will be removed in a future release, please use -opt-in instead"
-                )
-            }
-            put(AnalysisFlags.optIn, useExperimentalFqNames + optInDeprecatedFqNames + optIn?.toList().orEmpty())
+            put(AnalysisFlags.optIn, optIn?.toList().orEmpty())
             put(AnalysisFlags.expectActualLinker, expectActualLinker)
             put(AnalysisFlags.explicitApiVersion, apiVersion != null)
             put(AnalysisFlags.allowResultReturnType, allowResultReturnType)
