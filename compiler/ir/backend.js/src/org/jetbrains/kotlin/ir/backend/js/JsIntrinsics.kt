@@ -325,7 +325,7 @@ class JsIntrinsics(private val irBuiltIns: IrBuiltIns, val context: JsIrBackendC
 
     val jsUndefined = getInternalFunction("jsUndefined")
 
-    val linkageErrorSymbol = getInternalFunction("throwLinkageError")
+    val linkageErrorSymbol = getInternalFunction("throwIrLinkageError")
 
     // Helpers:
 
