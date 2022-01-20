@@ -6,11 +6,8 @@
 package org.jetbrains.kotlin.ir.util
 
 import org.jetbrains.kotlin.ir.IrElement
-import org.jetbrains.kotlin.ir.declarations.IrDeclaration
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
-import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationBase
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.visitors.IrThinVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 import java.util.*
@@ -21,7 +18,7 @@ fun <T : IrElement> T.patchDeclarationParents(initialParent: IrDeclarationParent
         acceptVoid(visitor)
     }
 
-class PatchDeclarationParentsVisitor() : IrElementVisitorVoid {
+class PatchDeclarationParentsVisitor() : IrThinVisitorVoid() {
 
     constructor(containingDeclaration: IrDeclarationParent) : this() {
         declarationParentsStack.push(containingDeclaration)
@@ -33,27 +30,83 @@ class PatchDeclarationParentsVisitor() : IrElementVisitorVoid {
         element.acceptChildrenVoid(this)
     }
 
-    override fun visitPackageFragment(declaration: IrPackageFragment) {
+    private fun visitPackageFragment(declaration: IrPackageFragment) {
         declarationParentsStack.push(declaration)
-        super.visitPackageFragment(declaration)
+        visitElement(declaration)
         declarationParentsStack.pop()
     }
 
-    override fun visitDeclaration(declaration: IrDeclarationBase) {
-        patchParent(declaration)
+    override fun visitFile(declaration: IrFile) {
+        visitPackageFragment(declaration)
+    }
+
+    override fun visitExternalPackageFragment(declaration: IrExternalPackageFragment) {
+        visitPackageFragment(declaration)
+    }
+
+    private fun visitDeclaration(declaration: IrDeclarationBase) {
+        declaration.parent = declarationParentsStack.peekFirst()
 
         if (declaration is IrDeclarationParent) {
             declarationParentsStack.push(declaration)
         }
 
-        super.visitDeclaration(declaration)
+        visitElement(declaration)
 
         if (declaration is IrDeclarationParent) {
             declarationParentsStack.pop()
         }
     }
 
-    private fun patchParent(declaration: IrDeclaration) {
-        declaration.parent = declarationParentsStack.peekFirst()
+    override fun visitScript(declaration: IrScript) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitClass(declaration: IrClass) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitSimpleFunction(declaration: IrSimpleFunction) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitConstructor(declaration: IrConstructor) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitProperty(declaration: IrProperty) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitField(declaration: IrField) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitLocalDelegatedProperty(declaration: IrLocalDelegatedProperty) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitVariable(declaration: IrVariable) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitEnumEntry(declaration: IrEnumEntry) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitAnonymousInitializer(declaration: IrAnonymousInitializer) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitTypeParameter(declaration: IrTypeParameter) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitValueParameter(declaration: IrValueParameter) {
+        visitDeclaration(declaration)
+    }
+
+    override fun visitTypeAlias(declaration: IrTypeAlias) {
+        visitDeclaration(declaration)
     }
 }
