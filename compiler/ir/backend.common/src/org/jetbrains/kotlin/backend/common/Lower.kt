@@ -168,52 +168,8 @@ private open class BodyLoweringVisitor(
         element.acceptChildren(this, data)
     }
 
-    private fun visitDeclaration(declaration: IrDeclarationBase) {
+    override fun visitDeclaration(declaration: IrDeclaration, data: IrDeclaration?) {
         declaration.acceptChildren(this, declaration)
-    }
-
-    override fun visitSimpleFunction(declaration: IrSimpleFunction, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitConstructor(declaration: IrConstructor, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitProperty(declaration: IrProperty, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitField(declaration: IrField, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitLocalDelegatedProperty(declaration: IrLocalDelegatedProperty, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitVariable(declaration: IrVariable, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitEnumEntry(declaration: IrEnumEntry, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitAnonymousInitializer(declaration: IrAnonymousInitializer, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitTypeParameter(declaration: IrTypeParameter, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitValueParameter(declaration: IrValueParameter, data: IrDeclaration?) {
-        visitDeclaration(declaration)
-    }
-
-    override fun visitTypeAlias(declaration: IrTypeAlias, data: IrDeclaration?) {
-        visitDeclaration(declaration)
     }
 
     override fun visitClass(declaration: IrClass, data: IrDeclaration?) {
@@ -222,24 +178,12 @@ private open class BodyLoweringVisitor(
         ArrayList(declaration.declarations).forEach { it.accept(this, declaration) }
     }
 
-    private fun visitBody(body: IrBody, data: IrDeclaration?) {
+    override fun visitBody(body: IrBody, data: IrDeclaration?) {
         if (withLocalDeclarations) body.acceptChildren(this, null)
         val stageController = data!!.factory.stageController
         stageController.restrictTo(data) {
             loweringPass.lower(body, data)
         }
-    }
-
-    override fun visitExpressionBody(body: IrExpressionBody, data: IrDeclaration?) {
-        visitBody(body, data)
-    }
-
-    override fun visitBlockBody(body: IrBlockBody, data: IrDeclaration?) {
-        visitBody(body, data)
-    }
-
-    override fun visitSyntheticBody(body: IrSyntheticBody, data: IrDeclaration?) {
-        visitBody(body, data)
     }
 
     override fun visitScript(declaration: IrScript, data: IrDeclaration?) {

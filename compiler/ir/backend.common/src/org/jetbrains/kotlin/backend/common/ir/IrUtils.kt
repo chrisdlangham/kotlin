@@ -367,61 +367,9 @@ object SetDeclarationsParentVisitor : IrThinVisitor<Unit, IrDeclarationParent>()
         }
     }
 
-    private fun visitDeclaration(declaration: IrDeclarationBase, data: IrDeclarationParent) {
+    override fun visitDeclaration(declaration: IrDeclaration, data: IrDeclarationParent) {
         declaration.parent = data
         visitElement(declaration, data)
-    }
-
-    override fun visitScript(declaration: IrScript, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitClass(declaration: IrClass, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitSimpleFunction(declaration: IrSimpleFunction, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitConstructor(declaration: IrConstructor, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitProperty(declaration: IrProperty, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitField(declaration: IrField, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitLocalDelegatedProperty(declaration: IrLocalDelegatedProperty, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitVariable(declaration: IrVariable, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitEnumEntry(declaration: IrEnumEntry, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitAnonymousInitializer(declaration: IrAnonymousInitializer, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitTypeParameter(declaration: IrTypeParameter, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitValueParameter(declaration: IrValueParameter, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
-    }
-
-    override fun visitTypeAlias(declaration: IrTypeAlias, data: IrDeclarationParent) {
-        visitDeclaration(declaration, data)
     }
 }
 
